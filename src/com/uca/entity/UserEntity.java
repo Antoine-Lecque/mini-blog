@@ -1,7 +1,7 @@
 package com.uca.entity;
 
 public class UserEntity {
-    private String Username;
+    private String username;
     private String password;
     private Boolean isBanned;
     private Boolean isAdmin;
@@ -11,11 +11,11 @@ public class UserEntity {
     }
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
     public void setUsername(String username) {
-        Username = username;
+        username = username;
     }
 
     public String getPassword() {
