@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class UserDao extends _Generic<UserEntity>{
 
-    public ArrayList<UserEntity> getAllArticles() {
+    public ArrayList<UserEntity> getAllUsers() {
         ArrayList<UserEntity> entities = new ArrayList<>();
         try {
             PreparedStatement preparedStatement = this.connect.prepareStatement("SELECT * FROM users ORDER BY username DESC;");

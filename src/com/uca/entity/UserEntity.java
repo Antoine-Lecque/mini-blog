@@ -15,7 +15,7 @@ public class UserEntity {
     }
 
     public void setUsername(String username) {
-        username = username;
+        this.username = username;
     }
 
     public String getPassword() {

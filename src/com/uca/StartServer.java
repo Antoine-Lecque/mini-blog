@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.uca.core.ArticleCore;
+import com.uca.core.UserCore;
 import com.uca.dao._Initializer;
 import com.uca.entity.ArticleEntity;
+import com.uca.entity.UserEntity;
 import com.uca.gui.*;
 import spark.Request;
 
@@ -39,6 +41,23 @@ public class StartServer {
             }
 
             ArrayList<ArticleEntity> entities = ArticleCore.getAllArticles();
+            if (entities == null || entities.size() == 0) {
+                res.status(204);
+                return "";
+            }
+
+            res.header("Content-Type", useXML ? "application/xml" : "application/json");
+            return parseContent(useXML, entities);
+        });
+
+        get("/api/users", (req, res) -> {
+            Boolean useXML = useXML(req);
+            if (useXML == null) {
+                res.status(406);
+                return "";
+            }
+
+            ArrayList<UserEntity> entities = UserCore.getAllUsers();
             if (entities == null || entities.size() == 0) {
                 res.status(204);
                 return "";
