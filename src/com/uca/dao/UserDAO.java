@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class UserDao extends _Generic<UserEntity>{
+public class UserDAO extends _Generic<UserEntity>{
 
     public ArrayList<UserEntity> getAllUsers() {
         ArrayList<UserEntity> entities = new ArrayList<>();
