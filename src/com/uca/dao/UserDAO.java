@@ -31,13 +31,18 @@ public class UserDAO extends _Generic<UserEntity>{
         return entities;
     }
 
-        @Override
-        public UserEntity create(UserEntity obj) {
-            //TODO !
-            return null;
-        }
+    @Override
+    public UserEntity create(UserEntity obj) {
+        //TODO !
+        return null;
+    }
 
-        @Override
+    @Override
+    public void update(UserEntity obj) {
+        //TODO !
+    }
+
+    @Override
         public void delete(int id) {
             //TODO !
         }

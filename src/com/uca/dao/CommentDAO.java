@@ -1,6 +1,5 @@
 package com.uca.dao;
 
-import com.uca.entity.ArticleEntity;
 import com.uca.entity.CommentEntity;
 
 import java.sql.PreparedStatement;
@@ -34,6 +33,11 @@ public class CommentDAO extends _Generic<CommentEntity> {
     public CommentEntity create(CommentEntity obj) {
         //TODO !
         return null;
+    }
+
+    @Override
+    public void update(CommentEntity obj) {
+        //TODO
     }
 
     @Override

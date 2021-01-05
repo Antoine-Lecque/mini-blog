@@ -34,6 +34,10 @@ public class StartServer {
 
         // API
 
+        /*-----------------*/
+        /* CRUD articles   */
+        /*-----------------*/
+
         // get all articles
         get("/api/articles", (req, res) -> {
             Boolean useXML = useXML(req);
@@ -91,21 +95,50 @@ public class StartServer {
             return parseContent(useXML, entity);
         });
 
+        //update artcle by id
+        put("/api/articles/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params(":id"));
+
+            ArticleEntity entity = ArticleCore.getArticleById(id);
+            if (entity != null) {
+                entity.setName(req.queryParams("name"));
+                entity.setContent(req.queryParams("content"));
+
+                ArticleCore.update(entity);
+                res.status(200);
+
+                return "user with id " + id + " is updated!";
+            } else {
+                res.status(404);
+                return "article not found";
+            }
+
+        });
+
         //Delete article by id
         delete("/api/articles/:id", (req, res) -> {
             int id = Integer.parseInt(req.params(":id"));
+
             ArticleEntity entity = ArticleCore.getArticleById(id);
 
             if (entity != null) {
                 ArticleCore.delete(id);
-                res.status(202);
+                res.status(200);
                 return "user with id " + id + " is deleted!";
             } else {
                 res.status(404);
-                return "user not found";
+                return "article not found";
             }
         });
 
+        /*-----------------*/
+        /* CRUD comments   */
+        /*-----------------*/
+        //TODO get, getbyid, post, patch, delete
+
+        /*-----------------*/
+        /* CRUD users      */
+        /*-----------------*/
 
         // get all users
         get("/api/users", (req, res) -> {
@@ -124,6 +157,8 @@ public class StartServer {
             res.header("Content-Type", useXML ? "application/xml" : "application/json");
             return parseContent(useXML, entities);
         });
+
+        //TODO getbyid, post, patch, delete
     }
 
     private static Boolean useXML(Request req) {

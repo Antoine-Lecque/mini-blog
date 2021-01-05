@@ -1,5 +1,7 @@
 package com.uca.dao;
 
+import com.uca.entity.ArticleEntity;
+
 import java.sql.Connection;
 
 public abstract class _Generic<T> {
@@ -12,6 +14,12 @@ public abstract class _Generic<T> {
      * @param obj
      */
     public abstract T create(T obj);
+
+    /**
+     * Permet la modification d'une entrée de la base
+     * @param obj
+     */
+    public abstract void update(T obj);
 
     /**
      * Permet la suppression d'une entrée de la base

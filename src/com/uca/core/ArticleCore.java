@@ -22,4 +22,6 @@ public class ArticleCore {
     public static void delete(int id) {
          new ArticleDAO().delete(id);
     }
+
+    public static void update(ArticleEntity obj) {new ArticleDAO().update(obj);}
 }
