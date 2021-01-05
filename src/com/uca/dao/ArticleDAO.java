@@ -69,7 +69,12 @@ public class ArticleDAO extends _Generic<ArticleEntity> {
     }
 
     @Override
-    public void delete(ArticleEntity obj) {
-        //TODO !
+    public void delete(int id) {
+        try {
+            PreparedStatement statement = this.connect.prepareStatement("DELETE FROM articles WHERE id="+id+";");
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

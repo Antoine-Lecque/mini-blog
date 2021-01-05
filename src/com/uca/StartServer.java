@@ -91,6 +91,22 @@ public class StartServer {
             return parseContent(useXML, entity);
         });
 
+        //Delete article by id
+        delete("/api/articles/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params(":id"));
+            ArticleEntity entity = ArticleCore.getArticleById(id);
+
+            if (entity != null) {
+                ArticleCore.delete(id);
+                res.status(202);
+                return "user with id " + id + " is deleted!";
+            } else {
+                res.status(404);
+                return "user not found";
+            }
+        });
+
+
         // get all users
         get("/api/users", (req, res) -> {
             Boolean useXML = useXML(req);

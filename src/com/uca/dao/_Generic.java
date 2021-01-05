@@ -15,8 +15,8 @@ public abstract class _Generic<T> {
 
     /**
      * Permet la suppression d'une entrée de la base
-     * @param obj
+     * @param id
      */
-    public abstract void delete(T obj);
+    public abstract void delete(int id);
 
 }

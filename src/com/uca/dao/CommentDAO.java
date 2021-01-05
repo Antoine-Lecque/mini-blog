@@ -37,7 +37,7 @@ public class CommentDAO extends _Generic<CommentEntity> {
     }
 
     @Override
-    public void delete(CommentEntity obj) {
+    public void delete(int id) {
         //TODO !
     }
 }

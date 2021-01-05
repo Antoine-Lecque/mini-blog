@@ -18,4 +18,8 @@ public class ArticleCore {
     public static ArticleEntity create(ArticleEntity obj) {
         return new ArticleDAO().create(obj);
     }
+
+    public static void delete(int id) {
+         new ArticleDAO().delete(id);
+    }
 }
