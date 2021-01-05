@@ -1,9 +1,11 @@
 package com.uca.dao;
 
 import com.uca.entity.ArticleEntity;
+import com.uca.entity.CommentEntity;
 
 import java.sql.Connection;
 
+@SuppressWarnings("JavaDoc")
 public abstract class _Generic<T> {
 
     public Connection connect = _Connector.getInstance();
@@ -26,5 +28,4 @@ public abstract class _Generic<T> {
      * @param id
      */
     public abstract void delete(int id);
-
 }

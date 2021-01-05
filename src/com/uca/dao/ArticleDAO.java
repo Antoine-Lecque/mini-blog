@@ -14,7 +14,7 @@ public class ArticleDAO extends _Generic<ArticleEntity> {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 ArticleEntity entity = new ArticleEntity();
-                entity.setId(resultSet.getInt("id"));
+                entity.setId(resultSet.getInt("id_article"));
                 entity.setAuthor(resultSet.getString("author"));
                 entity.setContent(resultSet.getString("content"));
                 entity.setCreated_time(resultSet.getTimestamp("created_at"));
@@ -32,13 +32,13 @@ public class ArticleDAO extends _Generic<ArticleEntity> {
     public ArticleEntity getArticleById(int id) {
         ArticleEntity entity = new ArticleEntity();
         try {
-            PreparedStatement preparedStatement = this.connect.prepareStatement("SELECT * FROM articles WHERE id=" + id + ";");
+            PreparedStatement preparedStatement = this.connect.prepareStatement("SELECT * FROM articles WHERE id_article=" + id + ";");
             ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.next()) {
                 return null;
             } else {
                 do {
-                    entity.setId(resultSet.getInt("id"));
+                    entity.setId(resultSet.getInt("id_article"));
                     entity.setAuthor(resultSet.getString("author"));
                     entity.setContent(resultSet.getString("content"));
                     entity.setCreated_time(resultSet.getTimestamp("created_at"));

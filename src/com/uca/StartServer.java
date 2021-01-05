@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.uca.core.ArticleCore;
+import com.uca.core.CommentCore;
 import com.uca.core.UserCore;
 import com.uca.dao._Initializer;
 import com.uca.entity.ArticleEntity;
+import com.uca.entity.CommentEntity;
 import com.uca.entity.UserEntity;
 import com.uca.gui.*;
 import spark.Request;
@@ -66,6 +68,7 @@ public class StartServer {
             }
 
             ArticleEntity entity = ArticleCore.getArticleById(id);
+            System.out.println("-----------------------------------------------------------------------"+entity);
             if (entity == null) {
                 res.status(204);
                 return "";
@@ -107,7 +110,7 @@ public class StartServer {
                 ArticleCore.update(entity);
                 res.status(200);
 
-                return "user with id " + id + " is updated!";
+                return "article with id " + id + " is updated!";
             } else {
                 res.status(404);
                 return "article not found";
@@ -124,17 +127,113 @@ public class StartServer {
             if (entity != null) {
                 ArticleCore.delete(id);
                 res.status(200);
-                return "user with id " + id + " is deleted!";
+                return "article with id " + id + " is deleted!";
             } else {
                 res.status(404);
                 return "article not found";
             }
         });
 
+
         /*-----------------*/
         /* CRUD comments   */
         /*-----------------*/
-        //TODO get, getbyid, post, patch, delete
+
+        // get all comments
+        get("/api/comments", (req, res) -> {
+            Boolean useXML = useXML(req);
+            if (useXML == null) {
+                res.status(406);
+                return "";
+            }
+
+            ArrayList<CommentEntity> entities = CommentCore.getAllComments();
+            if (entities == null || entities.size() == 0) {
+                res.status(204);
+                return "";
+            }
+
+            res.header("Content-Type", useXML ? "application/xml" : "application/json");
+            return parseContent(useXML, entities);
+        });
+
+        // get article by id
+        get("/api/comments/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params(":id"));
+            Boolean useXML = useXML(req);
+            if (useXML == null) {
+                res.status(406);
+                return "";
+            }
+
+            CommentEntity entity = CommentCore.getCommentById(id);
+            if (entity == null) {
+                res.status(204);
+                return "";
+            }
+
+            res.header("Content-Type", useXML ? "application/xml" : "application/json");
+            return parseContent(useXML, entity);
+        });
+
+        //Create new comment
+        post("/api/comments", (req, res) -> {
+            Boolean useXML = useXML(req);
+            if (useXML == null) {
+                res.status(406);
+                return "";
+            }
+            CommentEntity entity = new CommentEntity();
+
+            //Cannot create a comment on an non-existant article
+            if (ArticleCore.getArticleById(Integer.parseInt(req.queryParams("article"))) != null) {
+                entity.setArticle(Integer.parseInt(req.queryParams("article")));
+                entity.setAuthor(req.queryParams("author"));
+                entity.setContent(req.queryParams("content"));
+                CommentCore.create(entity);
+                res.status(201);
+            }else{
+                res.status(204);
+                return "non-existant article, check the article id";
+            }
+
+            res.header("Content-Type", useXML ? "application/xml" : "application/json");
+            return parseContent(useXML, entity);
+        });
+
+        //update comment by id
+        put("/api/comments/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params(":id"));
+
+            CommentEntity entity = CommentCore.getCommentById(id);
+            if (entity != null) {
+                entity.setContent(req.queryParams("content"));
+
+                CommentCore.update(entity);
+                res.status(200);
+
+                return "comment with id " + id + " is updated!";
+            } else {
+                res.status(404);
+                return "comment not found";
+            }
+        });
+
+        //Delete comment by id
+        delete("/api/comments/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params(":id"));
+
+            CommentEntity entity = CommentCore.getCommentById(id);
+
+            if (entity != null) {
+                CommentCore.delete(id);
+                res.status(200);
+                return "comment with id " + id + " is deleted!";
+            } else {
+                res.status(404);
+                return "comment not found";
+            }
+        });
 
         /*-----------------*/
         /* CRUD users      */
@@ -157,6 +256,7 @@ public class StartServer {
             res.header("Content-Type", useXML ? "application/xml" : "application/json");
             return parseContent(useXML, entities);
         });
+
 
         //TODO getbyid, post, patch, delete
     }

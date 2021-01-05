@@ -10,11 +10,20 @@ public class _Initializer {
         try {
             PreparedStatement statement;
 
-            //Init articles table
-            statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS articles (id int primary key auto_increment, name varchar(100), author varchar(100), created_at timestamp, content longnvarchar(25000)); ");
+            /*statement = connection.prepareStatement("DROP TABLE articles CASCADE;");
             statement.executeUpdate();
 
-            statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS comments (content longnvarchar(25000), author varchar(100), created_at timestamp, article int); ");
+            statement = connection.prepareStatement("DROP TABLE comments CASCADE;");
+            statement.executeUpdate();
+
+            statement = connection.prepareStatement("DROP TABLE users CASCADE;");
+            statement.executeUpdate();*/
+
+            //Init articles table
+            statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS articles (id_article int primary key auto_increment, name varchar(100), author varchar(100), created_at timestamp, content longnvarchar(25000)); ");
+            statement.executeUpdate();
+
+            statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS comments (id_comment int primary key auto_increment, content longnvarchar(25000), author varchar(100), created_at timestamp, article int); ");
             statement.executeUpdate();
 
             statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS users (username varchar(100) primary key, password varchar(100), isAdmin boolean, isBanned boolean); ");
@@ -22,7 +31,7 @@ public class _Initializer {
 
 
             //Todo Remove me !
-            statement = connection.prepareStatement("DELETE FROM articles;");
+            /*statement = connection.prepareStatement("DELETE FROM articles;");
             statement.executeUpdate();
 
             statement = connection.prepareStatement("DELETE FROM comments;");
@@ -43,7 +52,7 @@ public class _Initializer {
             statement.setString(2, "password");
             statement.setBoolean(3, false);
             statement.setBoolean(4, false);
-            statement.executeUpdate();
+            statement.executeUpdate();*/
 
         } catch (Exception e){
             System.out.println(e.toString());

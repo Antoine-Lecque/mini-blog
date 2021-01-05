@@ -3,10 +3,19 @@ package com.uca.entity;
 import java.sql.Timestamp;
 
 public class CommentEntity {
+    private int id;
     private String content;
     private String author;
     private Timestamp created_time;
     private int article;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getContent() {
         return content;
