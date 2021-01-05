@@ -11,4 +11,11 @@ public class ArticleCore {
         return new ArticleDAO().getAllArticles();
     }
 
+    public static ArticleEntity getArticleById(int id) {
+        return new ArticleDAO().getArticleById(id);
+    }
+
+    public static ArticleEntity create(ArticleEntity obj) {
+        return new ArticleDAO().create(obj);
+    }
 }

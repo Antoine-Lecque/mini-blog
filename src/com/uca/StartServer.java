@@ -33,6 +33,8 @@ public class StartServer {
         });
 
         // API
+
+        // get all articles
         get("/api/articles", (req, res) -> {
             Boolean useXML = useXML(req);
             if (useXML == null) {
@@ -50,6 +52,46 @@ public class StartServer {
             return parseContent(useXML, entities);
         });
 
+        // get article by id
+        get("/api/articles/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params(":id"));
+            Boolean useXML = useXML(req);
+            if (useXML == null) {
+                res.status(406);
+                return "";
+            }
+
+            ArticleEntity entity = ArticleCore.getArticleById(id);
+            if (entity == null) {
+                res.status(204);
+                return "";
+            }
+
+            res.header("Content-Type", useXML ? "application/xml" : "application/json");
+            return parseContent(useXML, entity);
+        });
+
+        //Create new Article
+        post("/api/articles", (req, res) -> {
+            Boolean useXML = useXML(req);
+            if (useXML == null) {
+                res.status(406);
+                return "";
+            }
+
+            ArticleEntity entity = new ArticleEntity();
+            entity.setName(req.queryParams("name"));
+            entity.setAuthor(req.queryParams("author"));
+            entity.setContent(req.queryParams("content"));
+            ArticleCore.create(entity);
+
+            res.status(201);
+
+            res.header("Content-Type", useXML ? "application/xml" : "application/json");
+            return parseContent(useXML, entity);
+        });
+
+        // get all users
         get("/api/users", (req, res) -> {
             Boolean useXML = useXML(req);
             if (useXML == null) {
