@@ -4,7 +4,7 @@
 # Rapport TP Web-Serveur mini - blog
 
 ## Technologies utilisées :
-Pour ce projet j'ai choisi d'utiliser comme base le projet java donnée en exemple. Cela me permettait d'avoir comme base un build gradle avec les librairies déjà installées avec des fichiers de base et un exemple avec les articles qui me permettait de savoir plus facilement ce que je devais faire.
+Pour ce projet j'ai choisi d'utiliser comme base le projet java donnée en exemple. Cela me permettait d'avoir un build gradle avec les librairies déjà installées et un exemple avec les articles qui me permettait de savoir plus facilement ce que je devais faire.
 
 De plus, les vidéos d'aide fournies utilisaient cette technologie, cela permet donc de plus facilement implementer ce qu'on apprend grâce à ces vidéos (qui m'ont été par ailleurs d'une grande aide).
 
