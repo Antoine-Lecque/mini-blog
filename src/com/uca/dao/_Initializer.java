@@ -10,15 +10,6 @@ public class _Initializer {
         try {
             PreparedStatement statement;
 
-            /*statement = connection.prepareStatement("DROP TABLE articles CASCADE;");
-            statement.executeUpdate();
-
-            statement = connection.prepareStatement("DROP TABLE comments CASCADE;");
-            statement.executeUpdate();
-
-            statement = connection.prepareStatement("DROP TABLE users CASCADE;");
-            statement.executeUpdate();*/
-
             //Init articles table
             statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS articles (id_article int primary key auto_increment, name varchar(100), author varchar(100), created_at timestamp, content longnvarchar(25000)); ");
             statement.executeUpdate();

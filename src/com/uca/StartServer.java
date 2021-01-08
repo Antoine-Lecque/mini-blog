@@ -69,7 +69,6 @@ public class StartServer {
             }
 
             ArticleEntity entity = ArticleCore.getArticleById(id);
-            System.out.println("-----------------------------------------------------------------------"+entity);
             if (entity == null) {
                 res.status(204);
                 return "";
@@ -321,7 +320,7 @@ public class StartServer {
         });
 
         /*-----------------*/
-        /* users           */
+        /* CRUD users      */
         /*-----------------*/
 
         // get all users
@@ -450,7 +449,11 @@ public class StartServer {
             }
         });
 
-        //log in
+
+        /*-----------------*/
+        /* LOGIN           */
+        /*-----------------*/
+
         post("/api/login", (req, res) -> {
             Boolean useXML = useXML(req);
 

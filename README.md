@@ -12,6 +12,12 @@ Concernant les difficultés rencontrées, je n'ai pas réussi à faire le REST a
 ## Fonctionnement du projet :
 ### Pour lancer le serveur : 
 ./gradlew run
+###Pour tester les requêtes :
+Un utilisateur admin est déjà créé :
+
+**username :** Admin
+
+**mdp :** admin0
 ### Collection d'URL, Endpoints REST :
 Toutes les requêtes de création/modification/suppression **(sauf pour la création d'un utilisateur)** nécessites un token d'authentification dans le header.
 
