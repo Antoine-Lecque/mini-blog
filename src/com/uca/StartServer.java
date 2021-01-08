@@ -31,9 +31,7 @@ public class StartServer {
         _Initializer.Init();
 
         //Defining our routes
-        get("/", (req, res) -> {
-            return ArticleGUI.getAllArticles();
-        });
+        get("/", (req, res) -> ArticleGUI.getAllArticles());
 
         // API
 
@@ -112,7 +110,7 @@ public class StartServer {
             }
         });
 
-        //update artcle by id
+        //update article by id
         put("/api/articles/:id", (req, res) -> {
             int id = Integer.parseInt(req.params(":id"));
 
@@ -455,8 +453,6 @@ public class StartServer {
         /*-----------------*/
 
         post("/api/login", (req, res) -> {
-            Boolean useXML = useXML(req);
-
             String username = req.queryParams("username");
             String password = req.queryParams("password");
 
@@ -466,7 +462,7 @@ public class StartServer {
                 res.header("authentification", auth);
             }else{
                 res.status(400);
-                return "identifiant ou mot de passe incorect";
+                return "identifiant ou mot de passe incorrect";
             }
 
             return "";
