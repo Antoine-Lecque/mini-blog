@@ -4,14 +4,14 @@
 # Rapport TP Web-Serveur mini - blog
 
 ## Technologies utilisées :
-Pour ce projet j'ai choisi d'utiliser comme base le projet java donnée en exemple. Cela me permettait d'avoir comme base un build gradle avec les librairies deja installées avec des fichiers de base et un exemple avec les articles qui me permettait de savoir plus facilement ce que je devais faire.
+Pour ce projet j'ai choisi d'utiliser comme base le projet java donnée en exemple. Cela me permettait d'avoir comme base un build gradle avec les librairies déjà installées avec des fichiers de base et un exemple avec les articles qui me permettait de savoir plus facilement ce que je devais faire.
 
-De plus les vidéos d'aide fournis utilisait cette technologie, cela permet donc de plus facilement implementer ce qu'on apprend grâce à ces vidéos (qui m'ont été par ailleurs d'une grande aide).
+De plus, les vidéos d'aide fournies utilisaient cette technologie, cela permet donc de plus facilement implementer ce qu'on apprend grâce à ces vidéos (qui m'ont été par ailleurs d'une grande aide).
 
-Concernant les difficultés rencontrées, je n'ai pas réussi à faire le REST avec une interface web. J'ai préféré me concentrer sur les requêtes http et l'api puisque c'est sur cela que porte ce cours. De plus je n'ai pas réussis à récupérer les informations d'une requête si celle-ci sont en format JSON dans le body.
-Je récupère donc les informations dans l'url de la requête. 
+Concernant les difficultés rencontrées, je n'ai pas réussi à faire le REST avec une interface web. J'ai préféré me concentrer sur les requêtes http et l'API puisque c'est sur cela que porte ce cours. Je n'ai aussi pas réussis à récupérer les informations d'une requête si celle-ci sont en format JSON dans le body.
+Je récupère donc les informations dans l'URL de la requête. 
 
-Par exemple pour le login l'url complet de la requête sera : 
+Par exemple pour le login l'URL complete de la requête sera : 
 
 http://localhost:8081/api/login?username={username}&password={password}
 
