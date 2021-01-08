@@ -28,6 +28,8 @@ Un utilisateur admin est déjà créé :
 
 **mdp :** admin0
 
+De plus un export des requêtes sur le client REST Insomnia est fournis dans le rendu
+
 ### Endpoints REST :
 Toutes les requêtes de création/modification/suppression **(sauf pour la création d'un utilisateur)** nécessites un token d'authentification dans le header.
 
