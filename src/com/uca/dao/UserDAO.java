@@ -36,13 +36,13 @@ public class UserDAO extends _Generic<UserEntity>{
     public UserEntity getUserbyId(int id) {
         UserEntity entity = new UserEntity();
         try {
-            PreparedStatement preparedStatement = this.connect.prepareStatement("SELECT * FROM users WHERE id_users=" + id + ";");
+            PreparedStatement preparedStatement = this.connect.prepareStatement("SELECT * FROM users WHERE id_user =" + id + ";");
             ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.next()) {
                 return null;
             } else {
                 do {
-                    entity.setId(resultSet.getInt("id_users"));
+                    entity.setId(resultSet.getInt("id_user"));
                     entity.setUsername(resultSet.getString("username"));
                     entity.setPassword(resultSet.getString("password"));
                     entity.setAdmin(resultSet.getBoolean("isAdmin"));
@@ -74,7 +74,16 @@ public class UserDAO extends _Generic<UserEntity>{
 
     @Override
     public void update(UserEntity obj) {
-        //TODO !
+        try {
+            PreparedStatement statement = this.connect.prepareStatement("UPDATE users SET username = ?, isAdmin = ?, isBanned = ? WHERE id_user = ?");
+            statement.setString(1, obj.getUsername());
+            statement.setBoolean(2, obj.getAdmin());
+            statement.setBoolean(3, obj.getBanned());
+            statement.setInt(4, obj.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

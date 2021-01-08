@@ -1,5 +1,6 @@
 package com.uca.core;
 
+import com.uca.dao.CommentDAO;
 import com.uca.dao.UserDAO;
 import com.uca.dao._Connector;
 import com.uca.entity.UserEntity;
@@ -39,12 +40,16 @@ public class UserCore {
         return false;
     }
 
-    public static UserEntity getUserbyId(int id) {
+    public static UserEntity getUserById(int id) {
         return new UserDAO().getUserbyId(id);
     }
 
     public static void delete(int id) {
         new UserDAO().delete(id);
+    }
+
+    public static void update(UserEntity obj) {
+        new UserDAO().update(obj);
     }
 
     public static String getIdbyName(String username) {

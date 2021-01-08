@@ -342,6 +342,25 @@ public class StartServer {
             return parseContent(useXML, entities);
         });
 
+        // get article by id
+        get("/api/users/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params(":id"));
+            Boolean useXML = useXML(req);
+            if (useXML == null) {
+                res.status(406);
+                return "";
+            }
+
+            UserEntity entity = UserCore.getUserById(id);
+            if (entity == null) {
+                res.status(204);
+                return "";
+            }
+
+            res.header("Content-Type", useXML ? "application/xml" : "application/json");
+            return parseContent(useXML, entity);
+        });
+
         //Create new users
         post("/api/users", (req, res) -> {
             Boolean useXML = useXML(req);
@@ -362,11 +381,64 @@ public class StartServer {
             return parseContent(useXML, entity);
         });
 
+        //update user by id
+        put("/api/users/:id", (req, res) -> {
+
+            String auth = req.headers("authentification");
+
+            try {
+                Map<String, String> infoLogin = DoLogin.introspect(auth);
+
+                if (! UserCore.isAdmin(infoLogin.get("uuid")) || UserCore.isBanned(infoLogin.get("uuid"))) {
+                    res.status(401);
+                    return "not admin or banned";
+                }
+            }catch(Exception e){
+                res.status(401);
+                return "";
+            }
+
+            int id = Integer.parseInt(req.params(":id"));
+            UserEntity entity = UserCore.getUserById(id);
+
+            if (entity != null) {
+                if (req.queryParams("username") != null)
+                    entity.setUsername(req.queryParams("username"));
+
+                if (req.queryParams("isAdmin") != null)
+                    entity.setAdmin(Boolean.parseBoolean(req.queryParams("isAdmin")));
+
+                if (req.queryParams("isBanned") != null)
+                    entity.setBanned(Boolean.parseBoolean(req.queryParams("isBanned")));
+
+                UserCore.update(entity);
+                res.status(200);
+
+                return "user with id " + id + " is updated!";
+            } else {
+                res.status(404);
+                return "user not found";
+            }
+        });
+
         //Delete user by name
         delete("/api/users/:id", (req, res) -> {
-            int id = Integer.parseInt(req.params(":id"));
+            String auth = req.headers("authentification");
 
-            UserEntity entity = UserCore.getUserbyId(id);
+            try {
+                Map<String, String> infoLogin = DoLogin.introspect(auth);
+
+                if (! UserCore.isAdmin(infoLogin.get("uuid")) || UserCore.isBanned(infoLogin.get("uuid"))) {
+                    res.status(401);
+                    return "not admin or banned";
+                }
+            }catch(Exception e){
+                res.status(401);
+                return "";
+            }
+
+            int id = Integer.parseInt(req.params(":id"));
+            UserEntity entity = UserCore.getUserById(id);
 
             if (entity != null) {
                 UserCore.delete(id);
@@ -381,7 +453,6 @@ public class StartServer {
         //log in
         post("/api/login", (req, res) -> {
             Boolean useXML = useXML(req);
-
 
             String username = req.queryParams("username");
             String password = req.queryParams("password");
