@@ -71,7 +71,7 @@ public class ArticleDAO extends _Generic<ArticleEntity> {
     @Override
     public void update(ArticleEntity obj) {
         try {
-            PreparedStatement statement = this.connect.prepareStatement("UPDATE articles SET name = ?, author = ?, content = ? WHERE id = ?");
+            PreparedStatement statement = this.connect.prepareStatement("UPDATE articles SET name = ?, author = ?, content = ? WHERE id_article = ?");
             statement.setString(1, obj.getName());
             statement.setString(2, obj.getAuthor());
             statement.setString(3, obj.getContent());
@@ -85,7 +85,7 @@ public class ArticleDAO extends _Generic<ArticleEntity> {
     @Override
     public void delete(int id) {
         try {
-            PreparedStatement statement = this.connect.prepareStatement("DELETE FROM articles WHERE id="+id+";");
+            PreparedStatement statement = this.connect.prepareStatement("DELETE FROM articles WHERE id_article="+id+";");
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

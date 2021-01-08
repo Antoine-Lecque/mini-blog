@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.uca.core.ArticleCore;
 import com.uca.core.CommentCore;
+import com.uca.core.DoLogin;
 import com.uca.core.UserCore;
 import com.uca.dao._Initializer;
 import com.uca.entity.ArticleEntity;
@@ -86,51 +87,74 @@ public class StartServer {
                 return "";
             }
 
-            ArticleEntity entity = new ArticleEntity();
-            entity.setName(req.queryParams("name"));
-            entity.setAuthor(req.queryParams("author"));
-            entity.setContent(req.queryParams("content"));
-            ArticleCore.create(entity);
+            String auth = req.headers("authentification");
 
-            res.status(201);
+            try {
+                Map<String, String> infoLogin = DoLogin.introspect(auth);
 
-            res.header("Content-Type", useXML ? "application/xml" : "application/json");
-            return parseContent(useXML, entity);
+                ArticleEntity entity = new ArticleEntity();
+                entity.setName(req.queryParams("name"));
+                entity.setAuthor(infoLogin.get("sub"));
+                entity.setContent(req.queryParams("content"));
+                ArticleCore.create(entity);
+
+                res.status(201);
+
+                res.header("Content-Type", useXML ? "application/xml" : "application/json");
+                return parseContent(useXML, entity);
+            }catch(Exception e){
+                res.status(401);
+                return "";
+            }
         });
 
         //update artcle by id
         put("/api/articles/:id", (req, res) -> {
             int id = Integer.parseInt(req.params(":id"));
 
-            ArticleEntity entity = ArticleCore.getArticleById(id);
-            if (entity != null) {
-                entity.setName(req.queryParams("name"));
-                entity.setContent(req.queryParams("content"));
+            String auth = req.headers("authentification");
 
-                ArticleCore.update(entity);
-                res.status(200);
+            try {
+                Map<String, String> infoLogin = DoLogin.introspect(auth);
+                ArticleEntity entity = ArticleCore.getArticleById(id);
+                if (entity != null) {
+                    entity.setName(req.queryParams("name"));
+                    entity.setContent(req.queryParams("content"));
 
-                return "article with id " + id + " is updated!";
-            } else {
-                res.status(404);
-                return "article not found";
+                    ArticleCore.update(entity);
+                    res.status(200);
+
+                    return "article with id " + id + " is updated!";
+                } else {
+                    res.status(404);
+                    return "article not found";
+                }
+            }catch(Exception e){
+                res.status(401);
+                return "";
             }
-
         });
 
         //Delete article by id
         delete("/api/articles/:id", (req, res) -> {
             int id = Integer.parseInt(req.params(":id"));
+            String auth = req.headers("authentification");
 
-            ArticleEntity entity = ArticleCore.getArticleById(id);
+            try {
+                Map<String, String> infoLogin = DoLogin.introspect(auth);
+                ArticleEntity entity = ArticleCore.getArticleById(id);
 
-            if (entity != null) {
-                ArticleCore.delete(id);
-                res.status(200);
-                return "article with id " + id + " is deleted!";
-            } else {
-                res.status(404);
-                return "article not found";
+                if (entity != null) {
+                    ArticleCore.delete(id);
+                    res.status(200);
+                    return "article with id " + id + " is deleted!";
+                } else {
+                    res.status(404);
+                    return "article not found";
+                }
+            }catch(Exception e){
+                res.status(401);
+                return "";
             }
         });
 
@@ -183,39 +207,56 @@ public class StartServer {
                 res.status(406);
                 return "";
             }
-            CommentEntity entity = new CommentEntity();
 
-            //Cannot create a comment on an non-existant article
-            if (ArticleCore.getArticleById(Integer.parseInt(req.queryParams("article"))) != null) {
-                entity.setArticle(Integer.parseInt(req.queryParams("article")));
-                entity.setAuthor(req.queryParams("author"));
-                entity.setContent(req.queryParams("content"));
-                CommentCore.create(entity);
-                res.status(201);
-            }else{
-                res.status(204);
-                return "non-existant article, check the article id";
+            String auth = req.headers("authentification");
+
+            try {
+                Map<String, String> infoLogin = DoLogin.introspect(auth);
+                CommentEntity entity = new CommentEntity();
+
+                //Cannot create a comment on an non-existant article
+                if (ArticleCore.getArticleById(Integer.parseInt(req.queryParams("article"))) != null) {
+                    entity.setArticle(Integer.parseInt(req.queryParams("article")));
+                    entity.setAuthor(infoLogin.get("sub"));
+                    entity.setContent(req.queryParams("content"));
+                    CommentCore.create(entity);
+                    res.status(201);
+                }else{
+                    res.status(204);
+                    return "non-existant article, check the article id";
+                }
+
+                res.header("Content-Type", useXML ? "application/xml" : "application/json");
+                return parseContent(useXML, entity);
+            }catch(Exception e){
+                res.status(401);
+                return "";
             }
-
-            res.header("Content-Type", useXML ? "application/xml" : "application/json");
-            return parseContent(useXML, entity);
         });
 
         //update comment by id
         put("/api/comments/:id", (req, res) -> {
             int id = Integer.parseInt(req.params(":id"));
 
-            CommentEntity entity = CommentCore.getCommentById(id);
-            if (entity != null) {
-                entity.setContent(req.queryParams("content"));
+            String auth = req.headers("authentification");
 
-                CommentCore.update(entity);
-                res.status(200);
+            try {
+                Map<String, String> infoLogin = DoLogin.introspect(auth);
+                CommentEntity entity = CommentCore.getCommentById(id);
+                if (entity != null) {
+                    entity.setContent(req.queryParams("content"));
 
-                return "comment with id " + id + " is updated!";
-            } else {
-                res.status(404);
-                return "comment not found";
+                    CommentCore.update(entity);
+                    res.status(200);
+
+                    return "comment with id " + id + " is updated!";
+                } else {
+                    res.status(404);
+                    return "comment not found";
+                }
+            }catch(Exception e){
+                res.status(401);
+                return "";
             }
         });
 
@@ -223,15 +264,24 @@ public class StartServer {
         delete("/api/comments/:id", (req, res) -> {
             int id = Integer.parseInt(req.params(":id"));
 
-            CommentEntity entity = CommentCore.getCommentById(id);
+            String auth = req.headers("authentification");
 
-            if (entity != null) {
-                CommentCore.delete(id);
-                res.status(200);
-                return "comment with id " + id + " is deleted!";
-            } else {
-                res.status(404);
-                return "comment not found";
+            try {
+                Map<String, String> infoLogin = DoLogin.introspect(auth);
+                CommentEntity entity = CommentCore.getCommentById(id);
+
+                if (entity != null) {
+                    CommentCore.delete(id);
+                    res.status(200);
+                    return "comment with id " + id + " is deleted!";
+                } else {
+                    res.status(404);
+                    return "comment not found";
+                }
+
+            }catch(Exception e){
+                res.status(401);
+                return "";
             }
         });
 
@@ -259,6 +309,45 @@ public class StartServer {
 
 
         //TODO getbyid, login, register, create, delete
+        //Create new users
+        post("/api/users", (req, res) -> {
+            Boolean useXML = useXML(req);
+            if (useXML == null) {
+                res.status(406);
+                return "";
+            }
+            UserEntity entity = new UserEntity();
+            entity.setUsername(req.queryParams("username"));
+            entity.setPassword(req.queryParams("password"));
+            entity.setAdmin(Boolean.parseBoolean(req.queryParams("isAdmin")));
+            entity.setBanned(Boolean.parseBoolean(req.queryParams("isBanned")));
+            UserCore.create(entity);
+
+            res.status(201);
+
+            res.header("Content-Type", useXML ? "application/xml" : "application/json");
+            return parseContent(useXML, entity);
+        });
+
+        //log in
+        post("/api/login", (req, res) -> {
+            Boolean useXML = useXML(req);
+
+
+            String username = req.queryParams("username");
+            String password = req.queryParams("password");
+
+            if ( UserCore.check(username, password) ){
+                String auth = DoLogin.createToken(username, "9c4a64d5-22ba-49bc-94e2-12e9d8475413");
+                res.status(200);
+                res.header("authentification", auth);
+            }else{
+                res.status(400);
+                return "identifiant ou mot de passe incorect";
+            }
+
+            return "";
+        });
     }
 
     private static Boolean useXML(Request req) {

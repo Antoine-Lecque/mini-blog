@@ -1,7 +1,7 @@
 package com.uca.dao;
 
-import com.uca.entity.ArticleEntity;
 import com.uca.entity.UserEntity;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,8 +33,18 @@ public class UserDAO extends _Generic<UserEntity>{
 
     @Override
     public UserEntity create(UserEntity obj) {
-        //TODO !
-        return null;
+        try {
+            PreparedStatement statement = this.connect.prepareStatement("INSERT INTO users (username, password, isAdmin, isBanned) VALUES(?, ?, ?, ?);");
+            statement.setString(1, obj.getUsername());
+            statement.setString(2, BCrypt.hashpw(obj.getPassword(), BCrypt.gensalt()));
+            statement.setBoolean(3, obj.getAdmin());
+            statement.setBoolean(4, obj.getBanned());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return obj;
     }
 
     @Override
