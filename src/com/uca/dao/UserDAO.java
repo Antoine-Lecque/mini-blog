@@ -43,7 +43,7 @@ public class UserDAO extends _Generic<UserEntity>{
     }
 
     @Override
-        public void delete(int id) {
-            //TODO !
-        }
+    public void delete(int id) {
+        //TODO !
+    }
 }

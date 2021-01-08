@@ -236,7 +236,7 @@ public class StartServer {
         });
 
         /*-----------------*/
-        /* CRUD users      */
+        /* users           */
         /*-----------------*/
 
         // get all users
@@ -258,7 +258,7 @@ public class StartServer {
         });
 
 
-        //TODO getbyid, post, patch, delete
+        //TODO getbyid, login, register, create, delete
     }
 
     private static Boolean useXML(Request req) {
