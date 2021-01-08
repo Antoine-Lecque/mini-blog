@@ -21,7 +21,7 @@ http://localhost:8081/api/login?username={username}&password={password}
 ### Pour lancer le serveur : 
 ./gradlew run
 
-###Pour tester les requêtes :
+### Pour tester les requêtes :
 Un utilisateur admin est déjà créé :
 
 **username :** Admin
