@@ -1,5 +1,6 @@
 package com.uca.dao;
 
+import com.uca.entity.ArticleEntity;
 import com.uca.entity.UserEntity;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -17,6 +18,7 @@ public class UserDAO extends _Generic<UserEntity>{
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 UserEntity entity = new UserEntity();
+                entity.setId(resultSet.getInt("id_user"));
                 entity.setUsername(resultSet.getString("username"));
                 entity.setPassword(resultSet.getString("password"));
                 entity.setAdmin(resultSet.getBoolean("isAdmin"));
@@ -29,6 +31,29 @@ public class UserDAO extends _Generic<UserEntity>{
         }
 
         return entities;
+    }
+
+    public UserEntity getUserbyId(int id) {
+        UserEntity entity = new UserEntity();
+        try {
+            PreparedStatement preparedStatement = this.connect.prepareStatement("SELECT * FROM users WHERE id_users=" + id + ";");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next()) {
+                return null;
+            } else {
+                do {
+                    entity.setId(resultSet.getInt("id_users"));
+                    entity.setUsername(resultSet.getString("username"));
+                    entity.setPassword(resultSet.getString("password"));
+                    entity.setAdmin(resultSet.getBoolean("isAdmin"));
+                    entity.setBanned(resultSet.getBoolean("isBanned"));
+                } while (resultSet.next());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return entity;
     }
 
     @Override
@@ -54,6 +79,11 @@ public class UserDAO extends _Generic<UserEntity>{
 
     @Override
     public void delete(int id) {
-        //TODO !
+        try {
+            PreparedStatement statement = this.connect.prepareStatement("DELETE FROM users WHERE id_user=" + id + ";");
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

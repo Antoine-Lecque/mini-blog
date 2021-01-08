@@ -92,6 +92,11 @@ public class StartServer {
             try {
                 Map<String, String> infoLogin = DoLogin.introspect(auth);
 
+                if (! UserCore.isAdmin(infoLogin.get("uuid")) || UserCore.isBanned(infoLogin.get("uuid"))) {
+                    res.status(401);
+                    return "not admin or banned";
+                }
+
                 ArticleEntity entity = new ArticleEntity();
                 entity.setName(req.queryParams("name"));
                 entity.setAuthor(infoLogin.get("sub"));
@@ -117,9 +122,18 @@ public class StartServer {
             try {
                 Map<String, String> infoLogin = DoLogin.introspect(auth);
                 ArticleEntity entity = ArticleCore.getArticleById(id);
+
+                if (! UserCore.isAdmin(infoLogin.get("uuid")) || UserCore.isBanned(infoLogin.get("uuid"))) {
+                    res.status(401);
+                    return "not admin or banned";
+                }
+
                 if (entity != null) {
-                    entity.setName(req.queryParams("name"));
-                    entity.setContent(req.queryParams("content"));
+                    if (req.queryParams("name") != null)
+                        entity.setName(req.queryParams("name"));
+
+                    if (req.queryParams("content") != null)
+                        entity.setContent(req.queryParams("content"));
 
                     ArticleCore.update(entity);
                     res.status(200);
@@ -143,6 +157,11 @@ public class StartServer {
             try {
                 Map<String, String> infoLogin = DoLogin.introspect(auth);
                 ArticleEntity entity = ArticleCore.getArticleById(id);
+
+                if (! UserCore.isAdmin(infoLogin.get("uuid")) || UserCore.isBanned(infoLogin.get("uuid"))) {
+                    res.status(401);
+                    return "not admin or banned";
+                }
 
                 if (entity != null) {
                     ArticleCore.delete(id);
@@ -214,6 +233,11 @@ public class StartServer {
                 Map<String, String> infoLogin = DoLogin.introspect(auth);
                 CommentEntity entity = new CommentEntity();
 
+                if (UserCore.isBanned(infoLogin.get("uuid"))) {
+                    res.status(401);
+                    return "not admin or banned";
+                }
+
                 //Cannot create a comment on an non-existant article
                 if (ArticleCore.getArticleById(Integer.parseInt(req.queryParams("article"))) != null) {
                     entity.setArticle(Integer.parseInt(req.queryParams("article")));
@@ -243,6 +267,12 @@ public class StartServer {
             try {
                 Map<String, String> infoLogin = DoLogin.introspect(auth);
                 CommentEntity entity = CommentCore.getCommentById(id);
+
+                if (UserCore.isBanned(infoLogin.get("uuid"))) {
+                    res.status(401);
+                    return "not admin or banned";
+                }
+
                 if (entity != null) {
                     entity.setContent(req.queryParams("content"));
 
@@ -269,6 +299,11 @@ public class StartServer {
             try {
                 Map<String, String> infoLogin = DoLogin.introspect(auth);
                 CommentEntity entity = CommentCore.getCommentById(id);
+
+                if (UserCore.isBanned(infoLogin.get("uuid"))) {
+                    res.status(401);
+                    return "not admin or banned";
+                }
 
                 if (entity != null) {
                     CommentCore.delete(id);
@@ -307,8 +342,6 @@ public class StartServer {
             return parseContent(useXML, entities);
         });
 
-
-        //TODO getbyid, login, register, create, delete
         //Create new users
         post("/api/users", (req, res) -> {
             Boolean useXML = useXML(req);
@@ -329,6 +362,22 @@ public class StartServer {
             return parseContent(useXML, entity);
         });
 
+        //Delete user by name
+        delete("/api/users/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params(":id"));
+
+            UserEntity entity = UserCore.getUserbyId(id);
+
+            if (entity != null) {
+                UserCore.delete(id);
+                res.status(200);
+                return "user with id " + id + " is deleted!";
+            } else {
+                res.status(404);
+                return "user not found";
+            }
+        });
+
         //log in
         post("/api/login", (req, res) -> {
             Boolean useXML = useXML(req);
@@ -338,7 +387,7 @@ public class StartServer {
             String password = req.queryParams("password");
 
             if ( UserCore.check(username, password) ){
-                String auth = DoLogin.createToken(username, "9c4a64d5-22ba-49bc-94e2-12e9d8475413");
+                String auth = DoLogin.createToken(username, UserCore.getIdbyName(username));
                 res.status(200);
                 res.header("authentification", auth);
             }else{

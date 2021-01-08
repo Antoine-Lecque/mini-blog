@@ -1,6 +1,7 @@
 package com.uca.dao;
 
 import com.uca.entity.ArticleEntity;
+import com.uca.entity.UserEntity;
 
 import java.sql.*;
 import java.util.ArrayList;

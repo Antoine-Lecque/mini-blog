@@ -1,9 +1,7 @@
 package com.uca.core;
 
-import com.uca.dao.CommentDAO;
 import com.uca.dao.UserDAO;
 import com.uca.dao._Connector;
-import com.uca.entity.CommentEntity;
 import com.uca.entity.UserEntity;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -39,5 +37,64 @@ public class UserCore {
         }
 
         return false;
+    }
+
+    public static UserEntity getUserbyId(int id) {
+        return new UserDAO().getUserbyId(id);
+    }
+
+    public static void delete(int id) {
+        new UserDAO().delete(id);
+    }
+
+    public static String getIdbyName(String username) {
+        Connection connect = _Connector.getInstance();
+        String id = "";
+        try {
+            PreparedStatement preparedStatement = connect.prepareStatement("SELECT id_user FROM users WHERE username = ? ;");
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                id = resultSet.getString("id_user");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return id;
+    }
+
+    public static boolean isAdmin(String id) {
+        Connection connect = _Connector.getInstance();
+        Boolean isAdmin = false;
+        try {
+            PreparedStatement preparedStatement = connect.prepareStatement("SELECT isAdmin FROM users WHERE id_user = ? ;");
+            preparedStatement.setString(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                isAdmin = resultSet.getBoolean("isAdmin");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return isAdmin;
+    }
+
+    public static boolean isBanned(String id) {
+        Connection connect = _Connector.getInstance();
+        Boolean isBanned = false;
+        try {
+            PreparedStatement preparedStatement = connect.prepareStatement("SELECT isBanned FROM users WHERE id_user = ? ;");
+            preparedStatement.setString(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                isBanned = resultSet.getBoolean("isBanned");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return isBanned;
     }
 }

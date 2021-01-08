@@ -1,6 +1,7 @@
 package com.uca.entity;
 
 public class UserEntity {
+    private int id;
     private String username;
     private String password;
     private Boolean isBanned;
@@ -8,6 +9,14 @@ public class UserEntity {
 
     public UserEntity() {
         //Ignored !
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUsername() {

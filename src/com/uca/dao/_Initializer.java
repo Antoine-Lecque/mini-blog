@@ -26,7 +26,7 @@ public class _Initializer {
             statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS comments (id_comment int primary key auto_increment, content longnvarchar(25000), author varchar(100), created_at timestamp, article int); ");
             statement.executeUpdate();
 
-            statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS users (username varchar(100) primary key, password varchar(100), isAdmin boolean, isBanned boolean); ");
+            statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS users (id_user int primary key auto_increment, username varchar(100), password varchar(100), isAdmin boolean, isBanned boolean); ");
             statement.executeUpdate();
 
         } catch (Exception e){
